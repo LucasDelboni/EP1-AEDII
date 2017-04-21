@@ -98,6 +98,49 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
 }
 
 
+/************************/
+//fila
+
+typedef struct estr {
+        int valor;
+        struct estr *prox;
+} fila;
+
+adicionaElementoFila(fila *i, int var){
+	if (i->prox==NULL){
+		fila *novo = malloc(sizeof(fila));
+		novo->valor = var;
+		novo->prox = NULL;
+		i->prox = novo;	
+	}	
+	else{
+		fila *f = i->prox;
+    	while (f->prox != NULL){
+			f = f->prox;
+		}
+		fila* novo = malloc(sizeof(fila));
+		novo->valor = var;
+		novo->prox = NULL;
+		f->prox = novo;
+	}
+}
+
+removeElementoFila(fila *i){
+	if (i->valor==-1&&i->prox!=NULL){
+		fila *f = i->prox;
+		i->prox = f->prox;
+	}
+}
+
+fila *inicializaFila(){
+	fila *novo = malloc(sizeof(fila));
+	novo->prox = NULL;
+	novo->valor = -1;
+	return novo;
+}
+
+/***************************/
+
 
 //---------------------------------------------------------
 // use main() para fazer chamadas de teste ao seu programa
