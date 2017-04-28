@@ -16,7 +16,7 @@ char* nroUSP1() {
 // ######### ESCREVA O NROUSP DO SEGUNDO INTEGRANTE AQUI (OU DEIXE COM ZERO)
 char* nroUSP2() {
     return("8598666");
-}
+ }
 
 // elemento das listas de adjacência e de resposta
 typedef struct estr {
@@ -57,11 +57,15 @@ int removeElementoFila(FILA *f){
     int i= f->inicio->v;
     //printf("vai remover o %d ", i);
     PONT apagar = f->inicio;
+    printf("salvou ");
     f->inicio=f->inicio->prox;
     free(apagar);
+    printf("deu free");
     if(f->inicio==NULL){
+            printf("entrou if");
         f->fim=NULL;
     }
+    printf("saiu if");
     return i;
 }
 
@@ -138,17 +142,22 @@ void insereVertices(int *arestas, VERTICE *g, int A,int N, int *abertos){
 }
 
 void buscaProfundidade(VERTICE *g, int i, int fim){
-    printf("busca produndidade \n");
+    printf("%d", i);
+    if(i==fim){
+        printf(" encontrou");
+        printf("\n");
+        return;
+    }
     g[i].flag=1;
     NO * p = g[i].inicio;
-    printf("teste %d %d",i,p->v);
     while (p){
         if (g[p->v].flag==0){
-                printf("%d -> %d",i,p->v);
+            printf("-> ");
             buscaProfundidade(g, p->v, fim);
         }
         p=p->prox;
     }
+    printf("\n");
 }
 
 void zeraFlags(VERTICE *g, int N){
@@ -156,9 +165,6 @@ void zeraFlags(VERTICE *g, int N){
         g[i].flag=0;
     }
 }
-
-
-
 
 void buscaLargura(VERTICE *g, int inicio, int fim, int N){
     zeraFlags(g,N);
@@ -168,19 +174,24 @@ void buscaLargura(VERTICE *g, int inicio, int fim, int N){
     g[inicio].flag=1;
     while(f){
         int i = removeElementoFila(f);
+        printf("i= %d \n", i);
         NO *p = g[i].inicio;
-        //printf("dddd");
         while(p){
+            printf("proximo %d", p->v);
             if(g[p->v].flag==0){
-                //printf("fffff");
-                //printf("%d ->", i);
+                printf("\n saindo do %d e indo para o %d",i, p->v);
                 adicionaElementoFila(f, p->v);
                 g[p->v].flag=1;
-                printf("colocou flag 1");
+                printf("colocou flag 1 no %d \n", p->v);
             }
+            printf("saiu if e vai para o %d",p->prox);
             p=p->prox;
+            if(p==0){
+                break;
+            }
         }
         g[i].flag=2;
+         printf("colocou flag 2 no %d \n", p->v);
     }
 }
 
@@ -192,6 +203,8 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
 	// seu codigo AQUI
 	VERTICE *g = malloc(sizeof(VERTICE)*(N));
 	insereVertices(ijpeso,g,A,N, aberto);
+	 printf("\n busca produndidade \n");
+	zeraFlags(g,N);
 	buscaProfundidade(g,1,3);
 
 	buscaLargura(g,1,3,N);
@@ -217,7 +230,7 @@ int main() {
 	int fim=3;
 	int chave=2;
 	int A = 3;
-	int ijpeso[]={1,2,10, 2,3,20, 3,1,10, 2,1,5};
+	int ijpeso[]={1,2,10, 2,3,20, 3,1,10};
 
 	// o EP sera testado com uma serie de chamadas como esta
 	NO* teste = NULL;
