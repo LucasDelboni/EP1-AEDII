@@ -1,5 +1,5 @@
 //--------------------------------------------------------------
-// NOMES DOS RESPONSÁVEIS: Lucas Covre Delboni E blablabla
+// NOMES DOS RESPONSÁVEIS: Lucas Covre Delboni E Marcelo Toshiki Kozuma
 //--------------------------------------------------------------
 
 #include <stdio.h>
@@ -15,7 +15,7 @@ char* nroUSP1() {
 
 // ######### ESCREVA O NROUSP DO SEGUNDO INTEGRANTE AQUI (OU DEIXE COM ZERO)
 char* nroUSP2() {
-    return("0000000");
+    return("8598666");
 }
 
 // elemento das listas de adjacência e de resposta
