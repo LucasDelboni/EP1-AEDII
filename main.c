@@ -171,17 +171,16 @@ void buscaLargura(VERTICE *g, int inicio, int fim, int N){
     while(!f->inicio==NULL){
         int i = removeElementoFila(f);
         NO *p = g[i].inicio;
-        while(p!=0){
+        if(p->v==fim){
+            printf("encontrou o %d",p->v);
+        }
+        while(p){
             if(g[p->v].flag==0){
                 printf(" -> %d", p->v);
                 adicionaElementoFila(f, p->v);
                 g[p->v].flag=1;
             }
             p=p->prox;
-            //if(p==0){
-            //        printf("NPE");
-            //    return;
-            //}
         }
         g[i].flag=2;
     }
@@ -195,7 +194,7 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
 	// seu codigo AQUI
 	VERTICE *g = malloc(sizeof(VERTICE)*(N));
 	insereVertices(ijpeso,g,A,N, aberto);
-	 printf("\n busca produndidade \n");
+    printf("\n busca produndidade \n");
 	zeraFlags(g,N);
 	buscaProfundidade(g,1,3);
 
