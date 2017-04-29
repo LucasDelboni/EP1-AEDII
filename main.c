@@ -109,7 +109,7 @@ void insereVertice(VERTICE *g, int i, int j, int p){
 	novo->peso=p;
 	novo->prox=g[i].inicio;
 	g[i].inicio=novo;
-	printf("teste:%d->%d\n",i,g[i].inicio->v);
+	printf("teste:%d->%d:%d\n",i,g[i].inicio->v,g[i].inicio->peso);
 }
 
 void insereVertices(int *arestas, VERTICE *g, int A,int N, int *abertos){
@@ -196,7 +196,6 @@ void buscaLargura(VERTICE *g, int inicio, int fim, int N, int chave, int A){
         }
         g[i].flag=2;
     }
-    printf("\n peso taotal: %d ",pesoTotal);
 }
 
 NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int chave)
@@ -234,7 +233,7 @@ int main() {
 	int fim=3;
 	int chave=2;
 	int A = 4;
-	int ijpeso[]={1,2,10, 2,3,20, 3,1,15, 3,1,55};
+	int ijpeso[]={1,2,10, 2,3,20, 3,1,15, 1,3,55};
 
 	// o EP sera testado com uma serie de chamadas como esta
 	NO* teste = NULL;
