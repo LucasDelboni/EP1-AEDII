@@ -168,9 +168,11 @@ void buscaLargura(VERTICE *g, int inicio, int fim, int N){
     FILA *f = inicializaFila(inicio);
     adicionaElementoFila(f, inicio);
     g[inicio].flag=1;
+    int distancia = 0;
     while(!f->inicio==NULL){
         int i = removeElementoFila(f);
         NO *p = g[i].inicio;
+        distancia = distancia+p->peso;
         if(p->v==fim){
             printf("encontrou o %d",p->v);
         }
@@ -181,8 +183,11 @@ void buscaLargura(VERTICE *g, int inicio, int fim, int N){
                 g[p->v].flag=1;
             }
             p=p->prox;
+            distancia = distancia+p->peso; //<<<<
         }
         g[i].flag=2;
+        printf("\n");
+        printf("%d\n", distancia);
     }
 }
 
