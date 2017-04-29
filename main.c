@@ -92,20 +92,24 @@ void colocaAbertos(VERTICE *g, int *abertos, int A){
         }
         else{
             g[i].aberto=false;
+            printf("\n \n \n fecou a porta %d",i);
         }
+    }
+}
+
+void abreTodos(VERTICE *g, int A){
+    for(int i=1;i<=A;i++){
+            g[i].aberto = true;
     }
 }
 
 void insereVertice(VERTICE *g, int i, int j, int p){
     NO * novo = (NO*) malloc(sizeof(NO));
-    if(g[i].inicio){
-        printf("inicio:%d no elmento %d", g[i].inicio, i);
-    }
 	novo->v=j;
 	novo->peso=p;
-	novo->prox=NULL;
+	novo->prox=g[i].inicio;
 	g[i].inicio=novo;
-//	printf("teste:%d->%d\n",i,g[i].inicio->v);
+	printf("teste:%d->%d\n",i,g[i].inicio->v);
 }
 
 void insereVertices(int *arestas, VERTICE *g, int A,int N, int *abertos){
@@ -113,25 +117,25 @@ void insereVertices(int *arestas, VERTICE *g, int A,int N, int *abertos){
     for(int i=1;i<=N;i++){
         g[i].inicio=NULL;
     }
-	for(int i=0;i<A;i++){
 
-        int k=i*3;
-	    printf("%d - %d - %d \n",arestas[k],arestas[k+1],arestas[k+2]);
-        insereVertice(g,arestas[k],arestas[k+1],arestas[k+2]);
+    int k=1;
+	for(int i=1;i<=A*3;i=i+3){
+	    //printf("%d - %d - %d \n",arestas[i-1],arestas[i],arestas[i+1]);
+        insereVertice(g,arestas[i-1],arestas[i],arestas[i+1]);
     }
-    //colocaAbertos(g, abertos, A);
+    colocaAbertos(g, abertos, A);
 
 
     //imprime grafo:
-	for(int i=1;i<=N;i++){
-		NO *p = g[i].inicio;
-		printf("\n%d ->", i);
-		while(p){
-			printf(" %d", p->v);
-			p=p->prox;
-			printf("p=%d",p);
-		}
-	}
+	//for(int i=1;i<=N;i++){
+	//	NO *p = g[i].inicio;
+	//	printf("\n%d ->", i);
+	//	while(p){
+	//		printf(" %d", p->v);
+	//		p=p->prox;
+	//		printf("p=%d",p);
+	//	}
+	//}
 	printf("inseriu certo");
 
 
@@ -162,7 +166,8 @@ void zeraFlags(VERTICE *g, int N){
     }
 }
 
-void buscaLargura(VERTICE *g, int inicio, int fim, int N){
+void buscaLargura(VERTICE *g, int inicio, int fim, int N, int chave, int A){
+    int pesoTotal=0;
     printf(" busca em largura: \n %d",inicio);
     zeraFlags(g,N);
     FILA *f = inicializaFila(inicio);
@@ -171,19 +176,27 @@ void buscaLargura(VERTICE *g, int inicio, int fim, int N){
     while(!f->inicio==NULL){
         int i = removeElementoFila(f);
         NO *p = g[i].inicio;
-        if(p->v==fim){
-            printf("encontrou o %d",p->v);
+        if(i==chave){
+            abreTodos(g,A);
         }
         while(p){
-            if(g[p->v].flag==0){
-                printf(" -> %d", p->v);
-                adicionaElementoFila(f, p->v);
-                g[p->v].flag=1;
+            if(g[p->v].aberto==true){
+                if(p->v==fim){
+                    printf("encontrou o %d",p->v);
+                    return;
+                }
+                if(g[p->v].flag==0){
+                    printf(" -> %d", p->v);
+                    adicionaElementoFila(f, p->v);
+                    g[p->v].flag=1;
+                    pesoTotal=pesoTotal+p->peso;
+                }
             }
             p=p->prox;
         }
         g[i].flag=2;
     }
+    printf("\n peso taotal: %d ",pesoTotal);
 }
 
 NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int chave)
@@ -198,7 +211,7 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
 	zeraFlags(g,N);
 	buscaProfundidade(g,1,3);
 
-	buscaLargura(g,1,3,N);
+	buscaLargura(g,1,3,N, chave, A);
 	//...
 
 	return resp;
@@ -216,12 +229,12 @@ int main() {
 	// exemplo de teste trivial
 
 	int N=3; // grafo de 3 vértices 1..3
-	int aberto[] = {1,1,1}; // todos abertos
+	int aberto[] = {1,1,0}; // todos abertos
 	int inicio=1;
 	int fim=3;
 	int chave=2;
-	int A = 3;
-	int ijpeso[]={1,2,10, 2,3,20, 3,1,10};
+	int A = 4;
+	int ijpeso[]={1,2,10, 2,3,20, 3,1,15, 3,1,55};
 
 	// o EP sera testado com uma serie de chamadas como esta
 	NO* teste = NULL;
