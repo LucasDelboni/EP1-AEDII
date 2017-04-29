@@ -57,15 +57,11 @@ int removeElementoFila(FILA *f){
     int i= f->inicio->v;
     //printf("vai remover o %d ", i);
     PONT apagar = f->inicio;
-    printf("salvou ");
     f->inicio=f->inicio->prox;
     free(apagar);
-    printf("deu free");
     if(f->inicio==NULL){
-            printf("entrou if");
         f->fim=NULL;
     }
-    printf("saiu if");
     return i;
 }
 
@@ -167,31 +163,27 @@ void zeraFlags(VERTICE *g, int N){
 }
 
 void buscaLargura(VERTICE *g, int inicio, int fim, int N){
+    printf(" busca em largura: \n %d",inicio);
     zeraFlags(g,N);
     FILA *f = inicializaFila(inicio);
     adicionaElementoFila(f, inicio);
-    printf("\n");
     g[inicio].flag=1;
-    while(f){
+    while(!f->inicio==NULL){
         int i = removeElementoFila(f);
-        printf("i= %d \n", i);
         NO *p = g[i].inicio;
-        while(p){
-            printf("proximo %d", p->v);
+        while(p!=0){
             if(g[p->v].flag==0){
-                printf("\n saindo do %d e indo para o %d",i, p->v);
+                printf(" -> %d", p->v);
                 adicionaElementoFila(f, p->v);
                 g[p->v].flag=1;
-                printf("colocou flag 1 no %d \n", p->v);
             }
-            printf("saiu if e vai para o %d",p->prox);
             p=p->prox;
-            if(p==0){
-                break;
-            }
+            //if(p==0){
+            //        printf("NPE");
+            //    return;
+            //}
         }
         g[i].flag=2;
-         printf("colocou flag 2 no %d \n", p->v);
     }
 }
 
