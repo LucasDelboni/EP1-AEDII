@@ -57,38 +57,9 @@ typedef struct {
 // e outras funcoes auxiliares que esta
 // necessitar
 //------------------------------------------
-int removeElementoFila(FILA *f){
-    //printf("tentando remover");
-    int i= f->inicio->v;
-    //printf("vai remover o %d ", i);
-    PONT apagar = f->inicio;
-    f->inicio=f->inicio->prox;
-    free(apagar);
-    if(f->inicio==NULL){
-        f->fim=NULL;
-    }
-    return i;
-}
 
-FILA *inicializaFila(){
-	FILA *f = (FILA*)malloc(sizeof(FILA));
-	f->inicio=NULL;
-	f->fim=NULL;
-	return f;
-}
 
-void adicionaElementoFila(FILA *f, int var){
-    REGISTRO *novo = (REGISTRO*)malloc(sizeof(REGISTRO));
-    novo->prox=NULL;
-    novo->v=var;
-    if(f->inicio==NULL){
-        f->inicio=novo;
-    }
-    else{
-        f->fim->prox=novo;
-    }
-    f->fim=novo;
-}
+
 
 void colocaAbertos(VERTICE *g, int *abertos, int N){
     for(int i=1;i<=N;i++){
@@ -99,12 +70,6 @@ void colocaAbertos(VERTICE *g, int *abertos, int N){
             g[i].aberto=0;
             printf("\n \n \n fecou a porta %d",i);
         }
-    }
-}
-
-void abreTodos(VERTICE *g, int N){
-    for(int i=1;i<=N;i++){
-            g[i].aberto = true;
     }
 }
 
@@ -151,63 +116,6 @@ void insereVertices(int *arestas, VERTICE *g, int A,int N, int *abertos){
 
 }
 
-NO*  menorCaminho(NO *a, NO* b){
-    if(!b){
-        printf("\n aux null \n");
-        return a;
-    }    int distA=0;
-    while(a){
-
-        distA=distA+a->peso;
-        a=a->prox;
-    }
-
-    int distB =0;
-    printf("aux: ");
-    while(b){
-            printf(" %d -", b->v);
-        distB=distB+b->peso;
-        b=b->prox;
-    }
-    printf("resp: %d   aux: %d \n", distA, distB);
-    if(distA<=distB){
-        return a;
-    }
-    return b;
-}
-
-int buscaProfundidade(VERTICE *g, int i, int fim, int chave, int N, int dist, NO *resp, NO *aux){
-    if(i==chave){
-        printf("abre posrtas");
-        abreTodos(g, N);
-    }
-    printf("%d", i);
-    if(i==fim){
-        printf(" encontrou");
-        printf("\n");
-        resp = menorCaminho(resp, aux);
-        aux = NULL;
-        printf("distancia total: %d", dist);
-        return dist;
-    }
-
-    printf("valor do aux %d", aux);
-    g[i].flag=1;
-    NO * p = g[i].inicio;
-
-    while (p){
-        if(g[p->v].aberto==1){
-            if (g[p->v].flag==0){
-                printf("-> ");
-                dist=dist+p->peso;
-                buscaProfundidade(g, p->v, fim, chave, N, dist, resp, aux);
-            }
-        }
-        p=p->prox;
-    }
-    printf("\n");
-    return 0;
-}
 
 void zeraFlags(VERTICE *g, int N){
     for(int i=1;i<=N;i++){
@@ -215,203 +123,7 @@ void zeraFlags(VERTICE *g, int N){
     }
 }
 
-//void buscaLargura(VERTICE *g, int inicio, int fim, int N, int chave, int A, NO* resp){
-//    int dist[N];
-//    for(int i=1;i<=N;i++){
-//        dist[i]=INFINITY;
-//    }
-//    dist[inicio]=0;
-//
-//    FILA *f = inicializaFila();
-//    adicionaElementoFila(f, inicio);
-//    resp = g[inicio].inicio;
-//
-//
-//    int distancia = 0;
-//    printf(" busca em largura: \n %d",inicio);
-//    zeraFlags(g,N);
-//
-//    g[inicio].flag=1;
-//    while(!f->inicio==NULL){
-//        int i = removeElementoFila(f);
-//        NO *p = g[i].inicio;
-//        if(i==chave){
-//            printf("\n abrindo todos \n");
-//            abreTodos(g,N);
-//        }
-//        NO* ant = NULL;
-//        while(p){
-//            if(g[p->v].aberto==true){
-//                if(p->v==fim/*&&((p->peso)<)*/){
-//                        distancia = distancia+ p->peso;
-//                    resp=p;
-//                    resp=resp->prox;
-//                    printf("encontrou o %d",p->v);
-//
-//                    printf("\n peso %d totala: %d\n", p->peso,distancia);
-//                    dist[ant->v]=distancia;
-//                    //return;
-//                    g[p->v].flag=1;
-//                }
-//                if(g[p->v].flag==0){
-//                    distancia = distancia+ p->peso;
-//                    resp->prox=p;
-//                    resp=resp->prox;
-//
-//                    printf(" -> %d", p->v);
-//                    adicionaElementoFila(f, p->v);
-//                    g[p->v].flag=1;
-//                    printf("\n peso %d totalb: %d", p->peso,distancia);
-//                }
-//            }
-//            printf("vai setar o ant");
-//            ant = p;
-//            printf("vai setar o prox");
-//            p=p->prox;
-//            printf("setou tudo %d",p->v);
-//        }
-//        g[i].flag=2;
-//    }
-//
-//    //printf("\n peso total: %d", distancia);
-//    printf("\n distancias : ");
-//    for(int i=1;i<=N;i++){
-//        printf("- %d ",dist[i]);
-//    }
-//}
-//
-//void relax(int inicio, NO *p, int *dist, int *ant){
-//    printf("comparar %d com %d", dist[p->v], dist[inicio]+p->peso);
-//
-//    if((dist[p->v] > dist[inicio] + p->peso)){
-//        printf("nova distancia eh %d + %d ",dist[inicio] , p->peso);
-//        dist[p->v]=dist[inicio] + p->peso;
-//
-//        ant[p->v]=inicio;;
-//    }
-//}
-//
-//void removeAresta(VERTICE *g, int i, int j, int N){
-//    NO *p=g[i].inicio;
-//    NO *ant=NULL;
-//    while (p){
-//        if(p->v==j){
-//            p->prox=ant;
-//            free(ant);
-//        }
-//        ant =p;
-//        p=p->prox;
-//    }
-//}
-//
-//NO* extraiMin(VERTICE *aux, int N, int *dist){
-//    NO * min = aux[1].inicio;
-//    for(int i=1;i<=N; i++){
-//        if(dist[i]<dist[min->v]){
-//            min->v=i;
-//        }
-//        removeAresta(aux, i ,min->v, N);
-//    }
-//    return min;
-//}
 
-//void dj(int N, int inicio, int fim, VERTICE *g, int A){
-//    int dist[N];
-//    int ant[N];
-//    for(int i=1;i<=N;i++){
-//        dist[i] = INFINITY;
-//        ant[i]=NULL;
-//    }
-//    dist[fim]=0;
-//
-//
-//    printf("inicializo");
-//    NO *S=NULL;
-//    VERTICE *aux = g;
-//    for(int i=0;i<A;i++){
-//        NO *u = extraiMin(aux, N, dist);
-//        if(S){
-//        S->prox=u;
-//        }else{
-//            S=u;
-//        }
-//        NO *p=S;
-//        S=S->prox;
-//        if(!p){
-//            break;
-//        }
-//        while(p){
-//            relax(S,p,dist, ant);
-//            printf("aux: %d", p->v);
-//            p=p->prox;
-//        }
-//        for(int i=1;i<=N;i++){
-//           printf("\n distancia do %d eh %d  ",i,dist[i]);
-//        }
-//    }
-//}
-//
-
-void relaxamento(int N,int inicio, int destino, VERTICE *g,  int *dist){
-    for(int i=1;i<=N;i++){
-        NO *p = g[i].inicio;
-        while(p){
-            if(p->v==destino){
-                printf("com");
-                if(dist[i]==-1||dist[i]>dist[i]+p->peso){
-                    dist[i]=dist[i]+p->peso;
-                    //removeAresta(g,i,p->v,N);
-                }
-            }
-            p=p->prox;
-        }
-    }
-}
-
-void lucas(int N, int inicio, int fim, VERTICE* g){
-
-    int dist[N+1];
-    for(int i=1;i<=N;i++){
-        dist[i]=-1;
-    }
-    dist[fim]=0;
-
-    for(int i=1;i<=N;i++){
-        relaxamento(N, i,fim,g,dist);
-    }
-
-    NO *p = g[inicio].inicio;
-    while(p){
-        printf("destino é %d \n",p->v);
-        for(int i=1;i<=N;i++){
-            relaxamento(N, i,p->v,g,dist);
-        }
-        p=p->prox;
-    }
-
-
-
-    printf("\n");
-    for(int i=1;i<=N;i++){
-        printf("a%d=%d \n",i, dist[i]);
-    }
-
-}
-
-void removeLista(int i, VERTICE *g){
-    g[i].flag=1;
-}
-
-bool taNaFila(FILA *f, int i){
-    PONT p=f->inicio;
-    while(p){
-        if(p->v==i){
-            return true;
-        }
-        p=p->prox;
-    }
-    return false;
-}
 
 int menorDistanciaNaFila(int *dist,VERTICE *g, int N){
     int min =0;
@@ -435,19 +147,8 @@ int menorDistanciaNaFila(int *dist,VERTICE *g, int N){
     return retorno;
 }
 
-void adicionaElementoLista(FILA *f, int i){
-    REGISTRO *novo = (REGISTRO*)malloc(sizeof(REGISTRO));
-    novo ->prox=f->inicio;
-    novo ->v = i;
-    f->inicio=novo;
-    if(novo->prox==NULL){
-        f->fim=f->inicio;
-    }
-}
-
 
 void wikipedia(VERTICE *g, int inicio, int N, int *dist, int *prev, int *abertos){
-    printf("busca do %d\n", inicio);
     for(int i=1;i<=N;i++){
         dist[i]=INT_MAX;
         prev[i]=-1;
@@ -462,39 +163,20 @@ void wikipedia(VERTICE *g, int inicio, int N, int *dist, int *prev, int *abertos
 
     printf("\n");
     while(true){
-         //   printf("ainda tem fila\n");
+
         int u = menorDistanciaNaFila(dist, g, N);
-        //printf("pegou novo u\n");
-        //removeLista(u, g);
+
         g[u].flag=1;
-        //printf("removeu o u da fila\n");
-//        if(u==chave){
-               // printf("      pegou a chave     ");
-            //abre as portas q tavam fechadas
-//            for(int i =1;i<=N;i++){
-//                if(abertos[i]==0){
-//                    g[u].flag=0;
-//                }
-//                abertos[i]=1;
-//            }
-//        }
+
         printf("%d : ", u);
         NO *p = g[u].inicio;
         while (p){
-            printf(" %d ->",p->v);
-            //printf("while");
-            //if (abertos[p->v]==1){
-               // printf("entrou if\n");
-               // printf("-%d- ", p->v);
-               // printf("antes estava %d no %d\n",dist[u], u);
+            int alt = dist[u]+p->peso;
+            if(alt < dist[p->v]){
+                dist[p->v]=alt;
+                prev[p->v]=u;
+            }
 
-                int alt = dist[u]+p->peso;
-               // printf("pegou alt\n");
-                if(alt < dist[p->v]){
-                    dist[p->v]=alt;
-                    prev[p->v]=u;
-                }
-            //}
             p=p->prox;
         }
         printf("\n");
