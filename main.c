@@ -105,7 +105,7 @@ int menorDistanciaNaFila(int *dist,VERTICE *g, int N){
 }
 
 
-void wikipedia(VERTICE *g, int inicio, int N, int *dist, int *prev, int *abertos){
+void busca(VERTICE *g, int inicio, int N, int *dist, int *prev, int *abertos){
     for(int i=1;i<=N;i++){
         dist[i]=INT_MAX;
         prev[i]=-1;
@@ -169,7 +169,7 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
 
 
     int prev[N+1];
-    wikipedia(g,inicio,N, dist, prev, aberto);
+    busca(g,inicio,N, dist, prev, aberto);
 
     int prevAux[N+1];
     zeraFlags(g,N);
@@ -179,7 +179,7 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
 	for(int i=0;i<N;i++){
         aberto[i]=1;
 	}
-    wikipedia(g,chave,N, distAux, prevAux, aberto);
+    busca(g,chave,N, distAux, prevAux, aberto);
 
     if(prev[fim]!=-1){
         if(dist[fim]>dist[chave]+distAux[fim] && prevAux[fim]!=-1){
