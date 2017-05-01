@@ -158,6 +158,12 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
 	NO* resp;
 	resp = NULL;
 
+	if (inicio==fim){
+        	resp = (NO*) malloc(sizeof(NO));
+        	resp->v=fim;
+        	resp->prox=NULL;
+        	return resp;
+	}
 
 	VERTICE *g = (VERTICE*)malloc(sizeof(VERTICE)*(N+1));
 
