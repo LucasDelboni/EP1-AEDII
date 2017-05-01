@@ -398,39 +398,8 @@ void lucas(int N, int inicio, int fim, VERTICE* g){
 
 }
 
-void removeLista(FILA *f, int i){
-    printf("tentando remover %d\n",i);
-    PONT p = f->inicio;
-    printf("vai pro primeiro if %d\n",f->inicio->v);
-    if(p->v==i){
-            printf("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n");
-        f->inicio=NULL;
-        f->fim=NULL;
-        printf("yyy%dyyy",p->prox->v);
-        printf("removeu %d \n",p->v);
-        free(p);
-        return;
-    }
-    p=p->prox;
-
-    while(p){
-        printf("%d ",p->v);
-        if(p->v==i){
-            if(p==f->fim){
-                printf("\neh o fim\n");
-
-            }
-            PONT apagar = p;
-            if(p->prox){
-                p->prox=p->prox->prox;
-            }
-
-            printf("removeu %d \n",apagar->v);
-            free(apagar);
-            return;
-        }
-        p=p->prox;
-    }
+void removeLista(int i, VERTICE *g){
+    g[i].flag=1;
 }
 
 bool taNaFila(FILA *f, int i){
@@ -444,25 +413,24 @@ bool taNaFila(FILA *f, int i){
     return false;
 }
 
-int menorDistanciaNaFila(FILA *Q, int *dist){
-    PONT p= Q->inicio;
-    int min =dist[p->v];
-    int retorno =Q->inicio->v;
-    printf("vai entrar while \n");
+int menorDistanciaNaFila(int *dist,VERTICE *g, int N){
+    int min =0;
+    int retorno =0;
 
-    while(p){
-        printf("priimeiro if %d\n", p->v);
-        printf("fim eh %d",Q->fim);
-        if(dist[p->v]<min){
-            printf("entrou no primeiro if\n");
-            retorno=p->v;
-            min= dist[p->v];
+    for(int i=1;i<=N;i++){
+        if(g[i].flag!=1){
+            min = dist[i];
+            retorno =i;
         }
-        printf("segundo if\n");
-        if(p==Q->fim){
-            break;
+    }
+
+    for(int i=1;i<N;i++){
+        if(g[i].flag!=1){
+            if(dist[i]<min){
+                retorno = i;
+                min = dist[i];
+            }
         }
-        p=p->prox;
     }
     return retorno;
 }
@@ -479,21 +447,22 @@ void adicionaElementoLista(FILA *f, int i){
 
 
 void wikipedia(VERTICE *g, int inicio, int N, int *dist, int *prev){
-    FILA *Q = inicializaFila();
+    //FILA *Q = inicializaFila();
 
     for(int i=1;i<=N;i++){
         dist[i]=INT_MAX;
         prev[i]=-1;
-        adicionaElementoLista(Q,i);
+        g[i].flag=0;
+        //adicionaElementoLista(Q,i);
     }
     dist[inicio] = 0;
 
 
-    while(Q->inicio){
+    while(true){
             printf("ainda tem fila\n");
-        int u = menorDistanciaNaFila(Q, dist);
+        int u = menorDistanciaNaFila(dist, g, N);
         printf("pegou novo u\n");
-        removeLista(Q, u);
+        removeLista(u, g);
         printf("removeu o u da fila\n");
         NO *p = g[u].inicio;
         while (p){
@@ -512,6 +481,16 @@ void wikipedia(VERTICE *g, int inicio, int N, int *dist, int *prev){
             }
            // }
             p=p->prox;
+        }
+
+        int cont=1;
+        for(int i=1;i<=N;i++){
+            if(g[i].flag==1){
+                cont++;
+            }
+        }
+        if(cont==N){
+            break;
         }
     }
     //retornos
