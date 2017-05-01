@@ -179,8 +179,9 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
 	for(int i=0;i<N;i++){
         aberto[i]=1;
 	}
-    busca(g,chave,N, distAux, prevAux, aberto);
-
+	if(chave!=0){
+        busca(g,chave,N, distAux, prevAux, aberto);
+	}
     if(prev[fim]!=-1){
         if(dist[fim]>dist[chave]+distAux[fim] && prevAux[fim]!=-1){
             resp = (NO*) malloc(sizeof(NO));
@@ -263,14 +264,17 @@ int main() {
 	int aberto[] = {1,1,1}; // todos abertos
 	int inicio=1;
 	int fim=3;
-	int chave=2;
+	int chave=0;
 	int ijpeso[]={1,2,10, 2,3,20, 3,1,10, 1,3,7};
 	int A = (sizeof(ijpeso)/sizeof(int))/3;
 
 	// o EP sera testado com uma serie de chamadas como esta
 	NO* teste = NULL;
 	teste = caminho(N,A, ijpeso, aberto, inicio, fim, chave);
-
+    while(teste){
+        printf("%d->",teste->v);
+        teste=teste->prox;
+    }
 	return teste;
 
 }
