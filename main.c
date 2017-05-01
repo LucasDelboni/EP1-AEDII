@@ -21,12 +21,10 @@ char* nroUSP2() {
  }
 
 
-
-
 // elemento das listas de adjacência e de resposta
 typedef struct estr {
         int v; // elemento
-        int peso; // custo (não precisa ser usado na resposta)
+	int peso; // custo (não precisa ser usado na resposta)
         struct estr *prox;
 } NO;
 
@@ -38,24 +36,9 @@ typedef struct
        NO* inicio;
 } VERTICE;
 
-typedef struct aux {
-        int v;
-        struct aux *prox;
-}REGISTRO, *PONT;
 
-typedef struct {
-  PONT inicio;
-  PONT fim;
-} FILA;
-
-
-//------------------------------------------
-// O EP consiste em implementar esta funcao
-// e outras funcoes auxiliares que esta
-// necessitar
-//------------------------------------------
-
-
+// funcao principal
+NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int chave);
 
 
 void colocaAbertos(VERTICE *g, int *abertos, int N){
@@ -135,7 +118,6 @@ void wikipedia(VERTICE *g, int inicio, int N, int *dist, int *prev, int *abertos
     }
     dist[inicio] = 0;
 
-    printf("\n");
     while(true){
 
         int u = menorDistanciaNaFila(dist, g, N);
@@ -152,7 +134,6 @@ void wikipedia(VERTICE *g, int inicio, int N, int *dist, int *prev, int *abertos
 
             p=p->prox;
         }
-        printf("\n");
 
         int cont=1;
         for(int i=1;i<=N;i++){
@@ -166,61 +147,39 @@ void wikipedia(VERTICE *g, int inicio, int N, int *dist, int *prev, int *abertos
     }
 }
 
-
-
+//------------------------------------------
+// O EP consiste em implementar esta funcao
+// e outras funcoes auxiliares que esta
+// necessitar
+//------------------------------------------
 NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int chave)
 {
 	NO* resp;
 	resp = NULL;
 
-	// seu codigo AQUI
-	//NO* aux = NULL;
 
 	VERTICE *g = (VERTICE*)malloc(sizeof(VERTICE)*(N+1));
-	//FILA *f = (FILA*)malloc(sizeof(FILA));
+
 	insereVertices(ijpeso,g,A,N, aberto);
 
 
 
 	zeraFlags(g,N);
 	int dist[N];
-//	for(int i=1;i<=N;i++){
-//        dist[i]=INFINITY;
-//        printf("disti %d", dist[i]);
-//	}
+
 
     int prev[N+1];
     wikipedia(g,inicio,N, dist, prev, aberto);
-//    for(int i=1;i<=N;i++){
-//        printf("dist %d=%d\n",i,dist[i]);
-//    }
-//    for(int i=1;i<=N;i++){
-//        printf("prev i%d = %d \n", i, prev[i]);
-//	}
 
     int prevAux[N+1];
     zeraFlags(g,N);
     int distAux[N];
-//	for(int i=1;i<=N;i++){
-//        distAux[i]=INFINITY;
-//        printf("disti %d", distAux[i]);
-//	}
+
 	zeraFlags(g,N);
 	for(int i=0;i<N;i++){
         aberto[i]=1;
 	}
     wikipedia(g,chave,N, distAux, prevAux, aberto);
-//    for(int i=1;i<=N;i++){
-//        printf("distAux %d=%d\n",i,distAux[i]);
-//    }
-//    for(int i=1;i<=N;i++){
-//        printf("prevAux i%d = %d \n", i, prevAux[i]);
-//	}
-
-
-    //buscaLargura(g,1,3,N, chave, A, resp);
-
-
 
     if(prev[fim]!=-1){
         if(dist[fim]>dist[chave]+distAux[fim] && prevAux[fim]!=-1){
@@ -283,13 +242,10 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
             resp=novo;
         }
     }
+	//...
+
 	return resp;
 }
-
-
-
-
-
 
 
 
@@ -300,26 +256,23 @@ int main() {
 
 
 	// aqui vc pode incluir codigo de teste
+
 	// exemplo de teste trivial
 
 	int N=3; // grafo de 3 vértices 1..3
-	int aberto[] = {1,1,0}; // todos abertos
+	int aberto[] = {1,1,1}; // todos abertos
 	int inicio=1;
 	int fim=3;
 	int chave=2;
-	int A = 3;
-	int ijpeso[]={1,2,10, 2,3,20, 3,1,15};
+	int ijpeso[]={1,2,10, 2,3,20, 3,1,10, 1,3,7};
+	int A = (sizeof(ijpeso)/sizeof(int))/3;
 
 	// o EP sera testado com uma serie de chamadas como esta
 	NO* teste = NULL;
 	teste = caminho(N,A, ijpeso, aberto, inicio, fim, chave);
 
-	while(teste){
-	    //printf("teste: %d",teste);
-        printf("%d->",teste->v);
-        teste=teste->prox;
-	}
-	return 0;
+	return teste;
+
 }
 
 // por favor nao inclua nenhum código abaixo da função main()
