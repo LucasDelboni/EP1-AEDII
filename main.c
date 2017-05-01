@@ -48,9 +48,6 @@ typedef struct {
   PONT fim;
 } FILA;
 
-// funcao principal
-//NO *caminho(int N, int *ijpeso, int *aberto, int inicio, int fim, int chave);
-
 
 //------------------------------------------
 // O EP consiste em implementar esta funcao
@@ -68,52 +65,29 @@ void colocaAbertos(VERTICE *g, int *abertos, int N){
         }
         else{
             g[i].aberto=0;
-            printf("\n \n \n fecou a porta %d",i);
         }
     }
 }
 
 void insereVertice(VERTICE *g, int i, int j, int p){
-    printf("inicio do %d eh %d",i,g[i].inicio);
-
     NO *novo = (NO*) malloc(sizeof(NO));
 	novo->v=j;
 	novo->peso=p;
 	novo->prox=g[i].inicio;
 	g[i].inicio=novo;
-	printf("teste:%d->%d:%d   %d\n",i,g[i].inicio->v,g[i].inicio->peso,novo->prox);
-
 }
 
 void insereVertices(int *arestas, VERTICE *g, int A,int N, int *abertos){
     //inicializa
     for(int i=1;i<=N;i++){
-            printf("anulou o %d",i);
         g[i].inicio=NULL;
     }
 
     //INSERE NOS
 	for(int i=1;i<=A*3;i=i+3){
-	    //printf("%d - %d - %d \n",arestas[i-1],arestas[i],arestas[i+1]);
         insereVertice(g,arestas[i-1],arestas[i],arestas[i+1]);
     }
     colocaAbertos(g, abertos, N);
-
-
-    //imprime grafo:
-	for(int i=1;i<=N;i++){
-        NO *p = g[i].inicio;
-        printf("\n %d-> ",i);
-        while (p){
-                printf("a");
-            printf("%d(%d) -", p->v,p->peso);
-            p=p->prox;
-        printf("foi prox");
-        }
-	}
-	printf("inseriu certo");
-
-
 }
 
 
@@ -168,7 +142,6 @@ void wikipedia(VERTICE *g, int inicio, int N, int *dist, int *prev, int *abertos
 
         g[u].flag=1;
 
-        printf("%d : ", u);
         NO *p = g[u].inicio;
         while (p){
             int alt = dist[u]+p->peso;
@@ -209,30 +182,21 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
 
 
 
-    printf("\n busca produndidade \n");
 	zeraFlags(g,N);
 	int dist[N];
-	for(int i=1;i<=N;i++){
-        dist[i]=INFINITY;
-        printf("disti %d", dist[i]);
-	}
-
-
-
-	//buscaProfundidade(g,inicio,fim, chave, N, 0, resp, aux);
-
-	printf("busca muito louca");
-    //dj(N,inicio,fim,g,A);
-    //lucas(N,inicio,fim,g);
+//	for(int i=1;i<=N;i++){
+//        dist[i]=INFINITY;
+//        printf("disti %d", dist[i]);
+//	}
 
     int prev[N+1];
     wikipedia(g,inicio,N, dist, prev, aberto);
-    for(int i=1;i<=N;i++){
-        printf("dist %d=%d\n",i,dist[i]);
-    }
-    for(int i=1;i<=N;i++){
-        printf("prev i%d = %d \n", i, prev[i]);
-	}
+//    for(int i=1;i<=N;i++){
+//        printf("dist %d=%d\n",i,dist[i]);
+//    }
+//    for(int i=1;i<=N;i++){
+//        printf("prev i%d = %d \n", i, prev[i]);
+//	}
 
     int prevAux[N+1];
     zeraFlags(g,N);
@@ -246,20 +210,18 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
         aberto[i]=1;
 	}
     wikipedia(g,chave,N, distAux, prevAux, aberto);
-    printf("cabou\n");
-    for(int i=1;i<=N;i++){
-        printf("distAux %d=%d\n",i,distAux[i]);
-    }
-    for(int i=1;i<=N;i++){
-        printf("prevAux i%d = %d \n", i, prevAux[i]);
-	}
+//    for(int i=1;i<=N;i++){
+//        printf("distAux %d=%d\n",i,distAux[i]);
+//    }
+//    for(int i=1;i<=N;i++){
+//        printf("prevAux i%d = %d \n", i, prevAux[i]);
+//	}
 
 
     //buscaLargura(g,1,3,N, chave, A, resp);
 
 
 
-    printf("prev:  %d  fim %d",prev[fim],fim);
     if(prev[fim]!=-1){
         if(dist[fim]>dist[chave]+distAux[fim] && prevAux[fim]!=-1){
             resp = (NO*) malloc(sizeof(NO));
@@ -267,7 +229,6 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
             resp->v=fim;
             resp->prox=NULL;
             while(aux!=chave){
-                printf("\n aux: %d",aux);
                 aux=prevAux[aux];
                 NO *novo = (NO*)malloc(sizeof(NO));
                 novo->v=aux;
@@ -276,15 +237,12 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
             }
 
             while(aux!=inicio){
-                printf("\n aux: %d",aux);
                 aux=prev[aux];
                 NO *novo = (NO*)malloc(sizeof(NO));
                 novo->v=aux;
                 novo->prox = resp;
                 resp=novo;
             }
-
-            printf("\n passando pela chave eh melhor1");
         }
         else{
             resp = (NO*) malloc(sizeof(NO));
@@ -292,20 +250,17 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
             resp->v=fim;
             resp->prox=NULL;
             while(aux!=inicio){
-                printf("\n aux: %d",aux);
                 aux=prev[aux];
                 NO *novo = (NO*)malloc(sizeof(NO));
                 novo->v=aux;
                 novo->prox = resp;
                 resp=novo;
             }
-            printf("\n passando sem chave eh melhor");
             return resp;
         }
     }
     else{
         if(prevAux[fim]==-1){
-                printf("\n nao da pra chegar");
             return NULL;
         }
         resp = (NO*) malloc(sizeof(NO));
@@ -313,7 +268,6 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
         resp->v=fim;
         resp->prox=NULL;
         while(aux!=chave){
-            printf("\n aux: %d",aux);
             aux=prevAux[aux];
             NO *novo = (NO*)malloc(sizeof(NO));
             novo->v=aux;
@@ -322,14 +276,12 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
         }
 
         while(aux!=inicio){
-            printf("\n aux: %d",aux);
             aux=prev[aux];
             NO *novo = (NO*)malloc(sizeof(NO));
             novo->v=aux;
             novo->prox = resp;
             resp=novo;
         }
-        printf("\n retorna passando pela chave2");
     }
 	return resp;
 }
@@ -361,10 +313,7 @@ int main() {
 	// o EP sera testado com uma serie de chamadas como esta
 	NO* teste = NULL;
 	teste = caminho(N,A, ijpeso, aberto, inicio, fim, chave);
-//    caminho(N,A, ijpeso, aberto, inicio, fim, chave);
-	printf("ok");
 
-    printf("\nresposta :\n");
 	while(teste){
 	    //printf("teste: %d",teste);
         printf("%d->",teste->v);
