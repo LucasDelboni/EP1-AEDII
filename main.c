@@ -446,9 +446,8 @@ void adicionaElementoLista(FILA *f, int i){
 }
 
 
-void wikipedia(VERTICE *g, int inicio, int N, int *dist, int *prev, int *abertos, int chave){
-    //FILA *Q = inicializaFila();
-
+void wikipedia(VERTICE *g, int inicio, int N, int *dist, int *prev, int *abertos){
+    printf("busca do %d\n", inicio);
     for(int i=1;i<=N;i++){
         dist[i]=INT_MAX;
         prev[i]=-1;
@@ -458,8 +457,6 @@ void wikipedia(VERTICE *g, int inicio, int N, int *dist, int *prev, int *abertos
         else{
             g[i].flag=1;
         }
-
-        //adicionaElementoLista(Q,i);
     }
     dist[inicio] = 0;
 
@@ -471,13 +468,16 @@ void wikipedia(VERTICE *g, int inicio, int N, int *dist, int *prev, int *abertos
         //removeLista(u, g);
         g[u].flag=1;
         //printf("removeu o u da fila\n");
-        if(u==chave){
+//        if(u==chave){
                // printf("      pegou a chave     ");
             //abre as portas q tavam fechadas
-            for(int i =1;i<=N;i++){
-                abertos[i]=1;
-            }
-        }
+//            for(int i =1;i<=N;i++){
+//                if(abertos[i]==0){
+//                    g[u].flag=0;
+//                }
+//                abertos[i]=1;
+//            }
+//        }
         printf("%d : ", u);
         NO *p = g[u].inicio;
         while (p){
@@ -491,7 +491,6 @@ void wikipedia(VERTICE *g, int inicio, int N, int *dist, int *prev, int *abertos
                 int alt = dist[u]+p->peso;
                // printf("pegou alt\n");
                 if(alt < dist[p->v]){
-                 //   printf("comparou %d com %d\n",alt , dist[p->v]);
                     dist[p->v]=alt;
                     prev[p->v]=u;
                 }
@@ -510,7 +509,6 @@ void wikipedia(VERTICE *g, int inicio, int N, int *dist, int *prev, int *abertos
             break;
         }
     }
-    //retornos
 }
 
 
@@ -546,53 +544,111 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
     //lucas(N,inicio,fim,g);
 
     int prev[N+1];
-    wikipedia(g,inicio,N, dist, prev, aberto, chave);
+    wikipedia(g,inicio,N, dist, prev, aberto);
+    for(int i=1;i<=N;i++){
+        printf("dist %d=%d\n",i,dist[i]);
+    }
+    for(int i=1;i<=N;i++){
+        printf("prev i%d = %d \n", i, prev[i]);
+	}
 
     int prevAux[N+1];
     zeraFlags(g,N);
     int distAux[N];
-	for(int i=1;i<=N;i++){
-        distAux[i]=INFINITY;
-        printf("disti %d", distAux[i]);
+//	for(int i=1;i<=N;i++){
+//        distAux[i]=INFINITY;
+//        printf("disti %d", distAux[i]);
+//	}
+	zeraFlags(g,N);
+	for(int i=0;i<N;i++){
+        aberto[i]=1;
 	}
-    wikipedia(g,chave,N, distAux, prevAux, aberto, chave);
-
-	printf("cabou\n");
+    wikipedia(g,chave,N, distAux, prevAux, aberto);
+    printf("cabou\n");
     for(int i=1;i<=N;i++){
-        printf("%d=%d\n",i,dist[i]);
+        printf("distAux %d=%d\n",i,distAux[i]);
     }
-    //buscaLargura(g,1,3,N, chave, A, resp);
-	//...
-	for(int i=1;i<=N;i++){
-        printf("prev i%d = %d \n", i, prev[i]);
+    for(int i=1;i<=N;i++){
+        printf("prevAux i%d = %d \n", i, prevAux[i]);
 	}
 
-    int aux = fim;
-    resp = (NO*) malloc(sizeof(NO));
-    resp->v=fim;
-    printf("deu ruim");
-    printf("\n \n :%d", aux);
-    while(aux!=inicio){
-        resp->prox = resp;
-        resp->v=aux;
-        aux = prev[aux];
-        printf("\n \n :%d", aux);
-    }
 
-    if(prev[fim]!=1){
-        if(dist[fim]>dist[chave]+distAux[fim]){
-            printf("\n passando pela chave eh melhor");
+    //buscaLargura(g,1,3,N, chave, A, resp);
+
+
+
+    printf("prev:  %d  fim %d",prev[fim],fim);
+    if(prev[fim]!=-1){
+        if(dist[fim]>dist[chave]+distAux[fim] && prevAux[fim]!=-1){
+            resp = (NO*) malloc(sizeof(NO));
+            int aux=fim;
+            resp->v=fim;
+            resp->prox=NULL;
+            while(aux!=chave){
+                printf("\n aux: %d",aux);
+                aux=prevAux[aux];
+                NO *novo = (NO*)malloc(sizeof(NO));
+                novo->v=aux;
+                novo->prox = resp;
+                resp=novo;
+            }
+
+            while(aux!=inicio){
+                printf("\n aux: %d",aux);
+                aux=prev[aux];
+                NO *novo = (NO*)malloc(sizeof(NO));
+                novo->v=aux;
+                novo->prox = resp;
+                resp=novo;
+            }
+
+            printf("\n passando pela chave eh melhor1");
         }
         else{
+            resp = (NO*) malloc(sizeof(NO));
+            int aux=fim;
+            resp->v=fim;
+            resp->prox=NULL;
+            while(aux!=inicio){
+                printf("\n aux: %d",aux);
+                aux=prev[aux];
+                NO *novo = (NO*)malloc(sizeof(NO));
+                novo->v=aux;
+                novo->prox = resp;
+                resp=novo;
+            }
             printf("\n passando sem chave eh melhor");
+            return resp;
         }
     }
     else{
-        printf("\n retorna passando pela chave");
+        if(prevAux[fim]==-1){
+                printf("\n nao da pra chegar");
+            return NULL;
+        }
+        resp = (NO*) malloc(sizeof(NO));
+        int aux=fim;
+        resp->v=fim;
+        resp->prox=NULL;
+        while(aux!=chave){
+            printf("\n aux: %d",aux);
+            aux=prevAux[aux];
+            NO *novo = (NO*)malloc(sizeof(NO));
+            novo->v=aux;
+            novo->prox = resp;
+            resp=novo;
+        }
+
+        while(aux!=inicio){
+            printf("\n aux: %d",aux);
+            aux=prev[aux];
+            NO *novo = (NO*)malloc(sizeof(NO));
+            novo->v=aux;
+            novo->prox = resp;
+            resp=novo;
+        }
+        printf("\n retorna passando pela chave2");
     }
-
-
-
 	return resp;
 }
 
@@ -613,18 +669,25 @@ int main() {
 	// exemplo de teste trivial
 
 	int N=3; // grafo de 3 vértices 1..3
-	int aberto[] = {1,1,1}; // todos abertos
+	int aberto[] = {1,1,0}; // todos abertos
 	int inicio=1;
 	int fim=3;
 	int chave=2;
 	int A = 3;
-	int ijpeso[]={1,2,10, 2,3,20, 3,1,15, 1,3,7};
+	int ijpeso[]={1,2,10, 2,3,20, 3,1,15};
 
 	// o EP sera testado com uma serie de chamadas como esta
-//	NO* teste = NULL;
-//	teste = caminho(N,A, ijpeso, aberto, inicio, fim, chave);
-    caminho(N,A, ijpeso, aberto, inicio, fim, chave);
+	NO* teste = NULL;
+	teste = caminho(N,A, ijpeso, aberto, inicio, fim, chave);
+//    caminho(N,A, ijpeso, aberto, inicio, fim, chave);
 	printf("ok");
+
+    printf("\nresposta :\n");
+	while(teste){
+	    //printf("teste: %d",teste);
+        printf("%d->",teste->v);
+        teste=teste->prox;
+	}
 	return 0;
 }
 
