@@ -180,7 +180,7 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
 	for(int i=0;i<N;i++){
         aberto[i]=1;
 	}
-	if(chave!=0){
+	if(chave!=0 && chave<N){
         busca(g,chave,N, distAux, prevAux, aberto);
 	}
 
@@ -262,16 +262,16 @@ int main() {
     int aberto[] = {0,1,1,1,1,1,1,1,1}; // todos abertos
     int inicio=7;
     int fim=4;
-    int chave=6;
+    int chave=10;
     int ijpeso[]={1,2,30, 1,3,20, 3,4,20, 4,9,80, 7,9,80, 3,7,80, 2,7,30, 2,6,20, 6,7,10, 5,8,10};
     int A = (sizeof(ijpeso)/sizeof(int))/3;
     // o EP sera testado com uma serie de chamadas como esta
     NO* teste = NULL;
     teste = caminho(N,A, ijpeso, aberto, inicio, fim, chave);
-//    while(teste){
-//        printf("%d->",teste->v);
-//        teste=teste->prox;
-//    }
+    while(teste){
+        printf("%d->",teste->v);
+        teste=teste->prox;
+    }
     return 0;
 }
 
