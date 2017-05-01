@@ -69,6 +69,7 @@ void insereVertices(int *arestas, VERTICE *g, int A,int N, int *abertos){
     //INSERE NOS
 	for(int i=1;i<=A*3;i=i+3){
         insereVertice(g,arestas[i-1],arestas[i],arestas[i+1]);
+        insereVertice(g,arestas[i],arestas[i-1],arestas[i+1]);
     }
     colocaAbertos(g, abertos, N);
 }
@@ -182,6 +183,7 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
 	if(chave!=0){
         busca(g,chave,N, distAux, prevAux, aberto);
 	}
+
     if(prev[fim]!=-1){
         if(dist[fim]>dist[chave]+distAux[fim] && prevAux[fim]!=-1){
             resp = (NO*) malloc(sizeof(NO));
@@ -254,29 +256,23 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
 // use main() para fazer chamadas de teste ao seu programa
 //---------------------------------------------------------
 int main() {
-
-
-	// aqui vc pode incluir codigo de teste
-
-	// exemplo de teste trivial
-
-	int N=3; // grafo de 3 vértices 1..3
-	int aberto[] = {1,1,1}; // todos abertos
-	int inicio=1;
-	int fim=3;
-	int chave=0;
-	int ijpeso[]={1,2,10, 2,3,20, 3,1,10, 1,3,7};
-	int A = (sizeof(ijpeso)/sizeof(int))/3;
-
-	// o EP sera testado com uma serie de chamadas como esta
-	NO* teste = NULL;
-	teste = caminho(N,A, ijpeso, aberto, inicio, fim, chave);
-    while(teste){
-        printf("%d->",teste->v);
-        teste=teste->prox;
-    }
-	return teste;
-
+    // aqui vc pode incluir codigo de teste
+    // exemplo de teste trivial
+    int N=9; // grafo de 3 vértices 1..3
+    int aberto[] = {0,1,1,1,1,1,1,1,1}; // todos abertos
+    int inicio=7;
+    int fim=4;
+    int chave=6;
+    int ijpeso[]={1,2,30, 1,3,20, 3,4,20, 4,9,80, 7,9,80, 3,7,80, 2,7,30, 2,6,20, 6,7,10, 5,8,10};
+    int A = (sizeof(ijpeso)/sizeof(int))/3;
+    // o EP sera testado com uma serie de chamadas como esta
+    NO* teste = NULL;
+    teste = caminho(N,A, ijpeso, aberto, inicio, fim, chave);
+//    while(teste){
+//        printf("%d->",teste->v);
+//        teste=teste->prox;
+//    }
+    return 0;
 }
 
 // por favor nao inclua nenhum código abaixo da função main()
