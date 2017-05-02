@@ -194,13 +194,16 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
         if(dist[fim]>dist[chave]+distAux[fim] && prevAux[fim]!=-1){
             resp = (NO*) malloc(sizeof(NO));
             int aux=fim;
+            if(aux == -1){
+                return NULL;
+            }
             resp->v=fim;
             resp->prox=NULL;
             while(aux!=chave){
+                aux=prevAux[aux];
                 if(aux == -1){
                     return NULL;
                 }
-                aux=prevAux[aux];
                 NO *novo = (NO*)malloc(sizeof(NO));
                 novo->v=aux;
                 novo->prox = resp;
@@ -208,10 +211,10 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
             }
 
             while(aux!=inicio){
+                aux=prev[aux];
                 if(aux == -1){
                     return NULL;
                 }
-                aux=prev[aux];
                 NO *novo = (NO*)malloc(sizeof(NO));
                 novo->v=aux;
                 novo->prox = resp;
@@ -223,12 +226,14 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
             int aux=fim;
             resp->v=fim;
             resp->prox=NULL;
-
+            if(aux == -1){
+                return NULL;
+            }
             while(aux!=inicio){
+                aux=prev[aux];
                 if(aux == -1){
                     return NULL;
                 }
-                aux=prev[aux];
                 NO *novo = (NO*)malloc(sizeof(NO));
                 novo->v=aux;
                 novo->prox = resp;
@@ -247,10 +252,10 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
         resp->v=fim;
         resp->prox=NULL;
         while(aux!=chave){
+            aux=prevAux[aux];
             if(aux == -1){
                 return NULL;
             }
-            aux=prevAux[aux];
             NO *novo = (NO*)malloc(sizeof(NO));
             novo->v=aux;
             novo->prox = resp;
@@ -258,10 +263,10 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
         }
 
         while(aux!=inicio){
+            aux=prev[aux];
             if(aux == -1){
                 return NULL;
             }
-            aux=prev[aux];
             NO *novo = (NO*)malloc(sizeof(NO));
             novo->v=aux;
             novo->prox = resp;
@@ -282,7 +287,7 @@ int main() {
     // aqui vc pode incluir codigo de teste
     // exemplo de teste trivial
     int N=9; // grafo de 3 vértices 1..3
-    int aberto[] = {0,1,1,1,1,1,1,1,1}; // todos abertos
+    int aberto[] = {0,0,0,1,0,0,0,0,0}; // todos abertos
     int inicio=7;
     int fim=4;
     int chave=0;
