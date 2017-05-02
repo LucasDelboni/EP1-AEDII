@@ -122,7 +122,6 @@ void busca(VERTICE *g, int inicio, int N, int *dist, int *prev, int *abertos){
     while(true){
 
         int u = menorDistanciaNaFila(dist, g, N);
-
         g[u].flag=1;
 
         NO *p = g[u].inicio;
@@ -159,11 +158,12 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
 	resp = NULL;
 
 	if (inicio==fim){
-        	resp = (NO*) malloc(sizeof(NO));
-        	resp->v=fim;
-        	resp->prox=NULL;
-        	return resp;
-	}
+        resp = (NO*) malloc(sizeof(NO));
+        resp->v=fim;
+        resp->prox=NULL;
+        return resp;
+ 	}
+
 
 	VERTICE *g = (VERTICE*)malloc(sizeof(VERTICE)*(N+1));
 
@@ -189,20 +189,6 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
 	if(chave!=0 && chave<N){
         busca(g,chave,N, distAux, prevAux, aberto);
 	}
-	else{
-        resp = (NO*) malloc(sizeof(NO));
-        int aux=fim;
-        resp->v=fim;
-        resp->prox=NULL;
-        while(aux!=inicio){
-            aux=prev[aux];
-            NO *novo = (NO*)malloc(sizeof(NO));
-            novo->v=aux;
-            novo->prox = resp;
-            resp=novo;
-        }
-        return resp;
-	}
 
     if(prev[fim]!=-1){
         if(dist[fim]>dist[chave]+distAux[fim] && prevAux[fim]!=-1){
@@ -211,6 +197,9 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
             resp->v=fim;
             resp->prox=NULL;
             while(aux!=chave){
+                if(aux == -1){
+                    return NULL;
+                }
                 aux=prevAux[aux];
                 NO *novo = (NO*)malloc(sizeof(NO));
                 novo->v=aux;
@@ -219,6 +208,9 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
             }
 
             while(aux!=inicio){
+                if(aux == -1){
+                    return NULL;
+                }
                 aux=prev[aux];
                 NO *novo = (NO*)malloc(sizeof(NO));
                 novo->v=aux;
@@ -231,7 +223,11 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
             int aux=fim;
             resp->v=fim;
             resp->prox=NULL;
+
             while(aux!=inicio){
+                if(aux == -1){
+                    return NULL;
+                }
                 aux=prev[aux];
                 NO *novo = (NO*)malloc(sizeof(NO));
                 novo->v=aux;
@@ -242,6 +238,7 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
         }
     }
     else{
+
         if(prevAux[fim]==-1){
             return NULL;
         }
@@ -250,6 +247,9 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
         resp->v=fim;
         resp->prox=NULL;
         while(aux!=chave){
+            if(aux == -1){
+                return NULL;
+            }
             aux=prevAux[aux];
             NO *novo = (NO*)malloc(sizeof(NO));
             novo->v=aux;
@@ -258,6 +258,9 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
         }
 
         while(aux!=inicio){
+            if(aux == -1){
+                return NULL;
+            }
             aux=prev[aux];
             NO *novo = (NO*)malloc(sizeof(NO));
             novo->v=aux;
